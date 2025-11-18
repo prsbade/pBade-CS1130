@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Tax Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Merriweather", serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url("https://i.gifer.com/ATEv.gif");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            color: whitesmoke;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            color: whitesmoke;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 6px;
+            background-color: rgba(255,255,255,0.2);
+            color: whitesmoke;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007E6E;
+            border: none;
+            border-radius: 8px;
+            color: whitesmoke;
+            font-family: "Merriweather", serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+            button:hover {
+                background-color: #00695c;
+                transform: scale(1.05);
+            }
+
+        .result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #D6F4ED;
+            border-top: 2px dotted #D6F4ED;
+            padding-top: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            color: whitesmoke;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .back-link:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⊹₊ Income Tax Calculator ₊⊹</h1>
+
+        <label for="income">Enter Taxable Income (₱):</label>
+        <input type="number" id="income" placeholder="e.g 250000">
+
+        <button onclick="calculateTax()">Compute Tax</button>
+
+        <div class="result" id="result">Income Tax: ₱0.00</div>
+
+        <a href="index.html" class="back-link">✦.── Back to Main Menu</a>
+    </div>
+
+    <script>
+        function calculateTax() {
+            const incomeInput = document.getElementById('income');
+            const resultDiv = document.getElementById('result');
+            let income = parseFloat(incomeInput.value);
+            let tax = 0;
+
+            if (isNaN(income) || income < 0) {
+                resultDiv.innerText = "Invalid. Please enter a valid positive number.";
+                return;
+            }
+
+            if (income <= 250000) tax = 0;
+            else if (income <= 400000) tax = (income - 250000) * 0.20;
+            else if (income <= 800000) tax = 30000 + (income - 400000) * 0.25;
+            else if (income <= 2000000) tax = 130000 + (income - 800000) * 0.30;
+            else if (income <= 8000000) tax = 490000 + (income - 2000000) * 0.32;
+            else tax = 2410000 + (income - 8000000) * 0.35;
+
+            resultDiv.innerText = "Income Tax: ₱" + tax.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+    </script>
+</body>
+</html>

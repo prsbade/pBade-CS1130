@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊹₊ Payroll System ₊⊹</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: "Merriweather", serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url("https://i.gifer.com/ATEv.gif");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            width: 95%;
+            max-width: 800px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007E6E;
+            margin-bottom: 25px;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: space-between;
+        }
+
+            .form-grid label {
+                flex: 1 1 100%;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: whitesmoke;
+                text-align: left;
+            }
+
+            .form-grid input {
+                flex: 1 1 45%;
+                padding: 8px;
+                border-radius: 6px;
+                border: 1px solid rgba(255,255,255,0.4);
+                background-color: rgba(255,255,255,0.2);
+                color: whitesmoke;
+                font-size: 14px;
+            }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+            .button-row button {
+                padding: 10px 20px;
+                font-family: "Merriweather", serif;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                color: whitesmoke;
+                transition: transform 0.2s, background-color 0.2s;
+            }
+
+        .btn-add {
+            background-color: #007E6E;
+        }
+
+            .btn-add:hover {
+                background-color: #00695c;
+                transform: scale(1.05);
+            }
+
+        .btn-del {
+            background-color: #87BAC3;
+        }
+
+            .btn-del:hover {
+                background-color: #87BAC3;
+                transform: scale(1.05);
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        th, td {
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #007E6E;
+        }
+
+        th {
+            background-color: #007E6E;
+            color: whitesmoke;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .totals {
+            font-weight: bold;
+            color: #007E6E;
+        }
+
+        .back-link {
+            font-family: "Merriweather", serif;
+            display: inline-block;
+            margin-top: 20px;
+            color: whitesmoke;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .back-link:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>⊹₊ Payroll System ₊⊹</h1>
+
+        <div class="form-grid">
+            <label for="name">Employee Name:</label>
+            <input type="text" id="name" placeholder="New Employee">
+
+            <label for="days">Days Worked:</label>
+            <input type="number" id="days" placeholder="0">
+
+            <label for="rate">Daily Rate (₱):</label>
+            <input type="number" id="rate" placeholder="0.00">
+
+            <label for="deduction">Deduction (₱):</label>
+            <input type="number" id="deduction" placeholder="0.00">
+        </div>
+
+        <div class="button-row">
+            <button class="btn-add" onclick="addEmployee()">Add Employee</button>
+            <button class="btn-del" onclick="deleteEmployee()">Delete Employee</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Days</th>
+                    <th>Rate</th>
+                    <th>Gross</th>
+                    <th>Deduction</th>
+                    <th>Net</th>
+                </tr>
+            </thead>
+            <tbody id="payroll-body"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">Totals</td>
+                    <td id="total-gross" class="totals">0.00</td>
+                    <td id="total-deduction" class="totals">0.00</td>
+                    <td id="total-net" class="totals">0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <a href="index.html" class="back-link">✦.── Back to Main Menu</a>
+    </div>
+
+    <script>
+        function getNumberValue(id) {
+            const val = parseFloat(document.getElementById(id).value);
+            return isNaN(val) ? 0 : val;
+        }
+
+        function updateTotals() {
+            const tbody = document.getElementById('payroll-body');
+            let totalGross = 0, totalDeduction = 0, totalNet = 0;
+            for (let i = 0; i < tbody.rows.length; i++) {
+                const cells = tbody.rows[i].cells;
+                totalGross += parseFloat(cells[4].textContent);
+                totalDeduction += parseFloat(cells[5].textContent);
+                totalNet += parseFloat(cells[6].textContent);
+                cells[0].textContent = i + 1; // renumber
+            }
+            document.getElementById('total-gross').textContent = totalGross.toFixed(2);
+            document.getElementById('total-deduction').textContent = totalDeduction.toFixed(2);
+            document.getElementById('total-net').textContent = totalNet.toFixed(2);
+        }
+
+        function addEmployee() {
+            const name = document.getElementById('name').value.trim();
+            const days = getNumberValue('days');
+            const rate = getNumberValue('rate');
+            const deduction = getNumberValue('deduction');
+
+            if (!name || days <= 0 || rate <= 0) {
+                alert("Invalid. Please fill in valid employee data.");
+                return;
+            }
+
+            const gross = days * rate;
+            const net = gross - deduction;
+
+            const tbody = document.getElementById('payroll-body');
+            const newRow = tbody.insertRow();
+            const values = [tbody.rows.length, name, days, rate.toFixed(2), gross.toFixed(2), deduction.toFixed(2), net.toFixed(2)];
+
+            for (let i = 0; i < values.length; i++) {
+                const cell = newRow.insertCell(i);
+                cell.textContent = values[i];
+                if (i !== 1) cell.style.textAlign = 'right';
+            }
+
+            updateTotals();
+            clearInputs();
+        }
+
+        function deleteEmployee() {
+            const line = parseInt(prompt("Enter employee No. to delete:"), 10) - 1;
+            const tbody = document.getElementById('payroll-body');
+            if (!isNaN(line) && line >= 0 && line < tbody.rows.length) {
+                tbody.deleteRow(line);
+                updateTotals();
+            } else {
+                alert("⚠️ Invalid employee number.");
+            }
+        }
+
+        function clearInputs() {
+            document.getElementById('name').value = '';
+            document.getElementById('days').value = '';
+            document.getElementById('rate').value = '';
+            document.getElementById('deduction').value = '';
+        }
+
+    </script>
+</body>
+</html>
