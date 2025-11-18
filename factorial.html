@@ -113,7 +113,7 @@
             <div class="block">
                 <h2>The Nth Factorial</h2>
                 <h2>(While Loop)</h2>
-                <input type="number" id="factorial" placeholder="Enter n">
+                <input type="number" id="factorial" placeholder="Enter Num">
                 <button onclick="calculateFactorial()">Compute Factorial</button>
                 <div class="result" id="result-factorial"></div>
             </div>
@@ -122,7 +122,7 @@
             <div class="block">
                 <h2>Sum of First N Numbers</h2>
                 <h2>(Do While Loop)</h2>
-                <input type="number" id="sum" placeholder="Enter n">
+                <input type="number" id="sum" placeholder="Enter Num">
                 <button onclick="calculateSum()">Compute Sum</button>
                 <div class="result" id="result-sum"></div>
             </div>
@@ -131,7 +131,7 @@
             <div class="block">
                 <h2>Average of First N Numbers</h2>
                 <h2>(For Loop)</h2>
-                <input type="number" id="average" placeholder="Enter n">
+                <input type="number" id="average" placeholder="Enter Num">
                 <button onclick="calculateAverage()">Compute Average</button>
                 <div class="result" id="result-average"></div>
             </div>
@@ -175,7 +175,7 @@
         function calculateAverage() {
             let n = parseInt(document.getElementById("average").value);
             if (isNaN(n) || n <= 0) {
-                document.getElementById("result-average").innerText = "Incalid. Please enter a valid positive number.";
+                document.getElementById("result-average").innerText = "Invalid. Please enter a valid positive number.";
                 return;
             }
             let sum = 0;
